@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpha France Pharma - Thiện Duyên Y Quán</title>
+    <title>Alpha France Pharma - Offisante Bao Ngoc VN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -26,13 +26,21 @@
         .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ef4444; z-index: 30; }
         .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu.open { transform: translateX(0); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #059669; transition: width 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .admin-sidebar { min-width: 240px; }
+        .admin-tab.active { background: #1e3a5f; color: white; }
+        .lang-btn.active { background: #1e3a5f; color: white; }
+        .countdown-box { background: linear-gradient(135deg, #dc2626, #991b1b); }
     </style>
 </head>
 <body class="bg-stone-50">
-
     <div id="app">
         <!-- Navigation -->
-        <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-stone-200">
+        <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-stone-200 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">
                     <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
@@ -40,124 +48,270 @@
                             <i data-lucide="leaf" class="text-yellow-500 w-6 h-6"></i>
                         </div>
                         <div>
-                            <p class="text-blue-900 font-extrabold leading-none text-sm tracking-tighter">OFFISANTÉ BẢO NGỌC VN</p>
-                            <p class="text-emerald-700 text-[10px] font-bold italic uppercase">Thiện Duyên Y Quán</p>
+                            <p class="text-blue-900 font-extrabold leading-none text-sm tracking-tighter">OFFISANTE BAO NGOC VN</p>
+                            <p class="text-emerald-700 text-[10px] font-bold italic uppercase">Thien Duyen Y Quan</p>
                         </div>
                     </div>
                     
-                    <div class="hidden lg:flex items-center space-x-8 text-xs font-bold text-gray-700 uppercase tracking-widest">
-                        <a href="#about" class="hover:text-emerald-700 transition">Về chúng tôi</a>
-                        <a href="#products" class="hover:text-emerald-700 transition">Sản phẩm</a>
-                        <button onclick="switchTab('wallet')" class="flex items-center gap-2 hover:text-blue-900">
-                            <i data-lucide="wallet" class="w-4 h-4"></i>
-                            Ví: <span id="nav-balance" class="text-emerald-600 font-black">0đ</span>
-                        </button>
-                        <button onclick="switchTab('luckydraw')" class="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg">Quay số</button>
+                    <!-- Language Switcher -->
+                    <div class="hidden md:flex items-center gap-1 bg-stone-100 rounded-full p-1">
+                        <button onclick="switchLang('vi')" class="lang-btn active px-3 py-1 rounded-full text-[10px] font-bold transition" data-lang="vi">VN</button>
+                        <button onclick="switchLang('en')" class="lang-btn px-3 py-1 rounded-full text-[10px] font-bold transition" data-lang="en">EN</button>
+                        <button onclick="switchLang('fr')" class="lang-btn px-3 py-1 rounded-full text-[10px] font-bold transition" data-lang="fr">FR</button>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="hidden lg:flex items-center space-x-6 text-[11px] font-bold text-gray-700 uppercase tracking-widest">
+                        <a href="javascript:void(0)" onclick="switchTab('home')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_home">Trang chu</a>
+                        <a href="javascript:void(0)" onclick="switchTab('products')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_products">San pham</a>
+                        <a href="javascript:void(0)" onclick="switchTab('faq')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_faq">FAQ</a>
+                        <a href="javascript:void(0)" onclick="switchTab('events')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_events">Su kien</a>
+                        <a href="javascript:void(0)" onclick="switchTab('health')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_health">Suc khoe</a>
+                        <a href="javascript:void(0)" onclick="switchTab('about')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_about">Gioi thieu</a>
+                        <a href="javascript:void(0)" onclick="switchTab('contact')" class="nav-link hover:text-emerald-700 transition" data-i18n="nav_contact">Lien he</a>
+                        <button onclick="switchTab('luckydraw')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition shadow-lg text-[10px]" data-i18n="nav_spin">Quay so</button>
+                    </div>
+
+                    <div class="flex items-center gap-3">
                         <button onclick="switchTab('cart')" class="relative p-2 bg-stone-100 rounded-full">
                             <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-700"></i>
                             <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
                         </button>
-                        <i data-lucide="menu" class="lg:hidden w-6 h-6"></i>
+                        <button onclick="toggleMobileMenu()" class="lg:hidden p-2">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </nav>
 
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-white z-[60] flex flex-col">
+            <div class="flex justify-end p-6">
+                <button onclick="toggleMobileMenu()" class="p-2"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="flex flex-col items-center gap-6 text-lg font-bold">
+                <div class="flex gap-2 mb-4">
+                    <button onclick="switchLang('vi')" class="lang-btn active px-4 py-2 rounded-full text-xs font-bold border" data-lang="vi">Tieng Viet</button>
+                    <button onclick="switchLang('en')" class="lang-btn px-4 py-2 rounded-full text-xs font-bold border" data-lang="en">English</button>
+                    <button onclick="switchLang('fr')" class="lang-btn px-4 py-2 rounded-full text-xs font-bold border" data-lang="fr">Francais</button>
+                </div>
+                <a href="javascript:void(0)" onclick="switchTab('home');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_home">TRANG CHU</a>
+                <a href="javascript:void(0)" onclick="switchTab('products');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_products">SAN PHAM</a>
+                <a href="javascript:void(0)" onclick="switchTab('faq');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_faq">CAU HOI THUONG GAP</a>
+                <a href="javascript:void(0)" onclick="switchTab('events');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_events">SU KIEN</a>
+                <a href="javascript:void(0)" onclick="switchTab('health');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_health">GOC NHIN SUC KHOE</a>
+                <a href="javascript:void(0)" onclick="switchTab('about');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_about">GIOI THIEU</a>
+                <a href="javascript:void(0)" onclick="switchTab('contact');toggleMobileMenu()" class="py-3 border-b w-full text-center" data-i18n="nav_contact">LIEN HE</a>
+            </div>
+        </div>
+
         <main id="main-content" class="pt-20">
+
+
             <!-- HOME VIEW -->
             <div id="home-view">
                 <!-- Hero -->
                 <section class="relative h-[85vh] flex items-center justify-center hero-bg border-b border-stone-200">
                     <div class="text-center px-4 max-w-3xl">
-                        <p class="text-emerald-800 font-bold uppercase tracking-[0.3em] text-xs mb-4">Since 1989 - Bảo Ngọc Pharmaceutical</p>
-                        <h1 class="serif text-5xl md:text-7xl text-blue-900 mb-6 italic">Y đức làm gốc<br>Thiện tâm làm đầu</h1>
-                        <p class="text-stone-600 text-lg mb-10 font-medium">Gói ghém tâm tình trong từng vị thuốc - Chăm sóc sức khỏe gia đình Việt bằng tinh hoa Đông Y.</p>
+                        <p class="text-emerald-800 font-bold uppercase tracking-[0.3em] text-xs mb-4" data-i18n="hero_since">Since 1989 - Bao Ngoc Pharmaceutical</p>
+                        <h1 class="serif text-5xl md:text-7xl text-blue-900 mb-6 italic" data-i18n="hero_title">Y duc lam goc<br>Thien tam lam dau</h1>
+                        <p class="text-stone-600 text-lg mb-10 font-medium" data-i18n="hero_desc">Goi ghem tam tinh trong tung vi thuoc - Cham soc suc khoe gia dinh Viet bang tinh hoa Dong Y.</p>
                         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="#products" class="bg-blue-900 text-white px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-blue-950 transition">Mua thuốc ngay</a>
-                            <button onclick="switchTab('luckydraw')" class="bg-white text-red-600 border-2 border-red-600 px-10 py-4 rounded-2xl font-bold hover:bg-red-50 transition">Quay số trúng quà</button>
+                            <button onclick="switchTab('products')" class="bg-blue-900 text-white px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-blue-950 transition" data-i18n="hero_btn_buy">Mua thuoc ngay</button>
+                            <button onclick="switchTab('luckydraw')" class="bg-white text-red-600 border-2 border-red-600 px-10 py-4 rounded-2xl font-bold hover:bg-red-50 transition" data-i18n="hero_btn_spin">Quay so trung qua</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- About Us Story -->
-                <section id="about" class="py-24 bg-white overflow-hidden">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex flex-col lg:flex-row items-center gap-16">
-                            <div class="flex-1 relative">
-                                <div class="absolute -top-10 -left-10 w-40 h-40 bg-emerald-50 rounded-full blur-3xl opacity-50"></div>
-                                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80" alt="Tradition" class="rounded-[3rem] shadow-2xl relative z-10 w-full object-cover aspect-square">
-                            </div>
-                            <div class="flex-1">
-                                <span class="text-emerald-600 font-bold uppercase tracking-widest text-xs">Hành trình Thiện Duyên</span>
-                                <h2 class="serif text-4xl text-blue-900 mt-4 mb-8">Chuyện về một hiệu thuốc<br>Luôn coi bệnh nhân là người nhà</h2>
-                                <div class="space-y-6 text-stone-600 leading-relaxed text-lg">
-                                    <p>Khởi đầu từ những năm 1989, giữa nhịp sống hối hả của Sài Gòn xưa, **Thiện Duyên Y Quán** ra đời không chỉ với tư cách là một hiệu thuốc Đông Y, mà là nơi gửi gắm niềm hy vọng của những mảnh đời cần được chữa lành.</p>
-                                    <p>Chúng tôi gọi mỗi gói thuốc là một "bản tình ca của thảo mộc", nơi mỗi vị thuốc Bắc, vị thuốc Nam được tuyển chọn kỹ lưỡng bằng đôi tay của những bậc thầy tâm huyết. Tại Bảo Ngọc, chúng tôi không "bán" thuốc, chúng tôi **trao đi sự an tâm**.</p>
-                                    <p class="italic text-blue-900 font-bold">"Y đức làm gốc - Thiện tâm làm đầu" không chỉ là khẩu hiệu, đó là hơi thở trong từng công thức thuốc Lục Vị, Bình Vị mà bạn cầm trên tay hôm nay.</p>
-                                </div>
-                                <div class="mt-10 flex items-center gap-4 p-4 bg-stone-50 rounded-2xl border border-stone-100">
-                                    <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold">BN</div>
-                                    <p class="text-sm font-bold text-blue-900">Người sáng lập: "Chúng tôi gói ghém tâm tình vào từng vị thuốc để người bệnh thấy ấm lòng."</p>
-                                </div>
-                            </div>
+                <!-- Quick Links -->
+                <section class="py-16 bg-white">
+                    <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div onclick="switchTab('products')" class="cursor-pointer text-center p-6 bg-emerald-50 rounded-3xl hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="package" class="w-7 h-7 text-emerald-700"></i></div>
+                            <p class="font-bold text-blue-900 text-sm" data-i18n="quick_products">San pham</p>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Featured Products -->
-                <section id="products" class="py-24 bg-stone-100">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                            <div>
-                                <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs">Sản phẩm nổi bật</p>
-                                <h2 class="serif text-4xl text-blue-900 mt-2">Tinh hoa thảo mộc Bảo Ngọc</h2>
-                            </div>
-                            <div class="flex gap-2">
-                                <button class="bg-white p-3 rounded-full shadow-sm hover:bg-emerald-50 transition"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-                                <button class="bg-white p-3 rounded-full shadow-sm hover:bg-emerald-50 transition"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
-                            </div>
+                        <div onclick="switchTab('events')" class="cursor-pointer text-center p-6 bg-orange-50 rounded-3xl hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="calendar" class="w-7 h-7 text-orange-700"></i></div>
+                            <p class="font-bold text-blue-900 text-sm" data-i18n="quick_events">Su kien</p>
                         </div>
-
-                        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            <!-- Products will be generated by JS -->
+                        <div onclick="switchTab('health')" class="cursor-pointer text-center p-6 bg-blue-50 rounded-3xl hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="heart-pulse" class="w-7 h-7 text-blue-700"></i></div>
+                            <p class="font-bold text-blue-900 text-sm" data-i18n="quick_health">Suc khoe</p>
+                        </div>
+                        <div onclick="switchTab('contact')" class="cursor-pointer text-center p-6 bg-purple-50 rounded-3xl hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="phone" class="w-7 h-7 text-purple-700"></i></div>
+                            <p class="font-bold text-blue-900 text-sm" data-i18n="quick_contact">Lien he</p>
                         </div>
                     </div>
                 </section>
             </div>
+
+            <!-- PRODUCTS VIEW -->
+            <div id="products-view" class="hidden py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs" data-i18n="products_subtitle">San pham noi bat</p>
+                        <h2 class="serif text-4xl text-blue-900 mt-2" data-i18n="products_title">Tinh hoa thao moc Bao Ngoc</h2>
+                    </div>
+                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+                </div>
+            </div>
+
+            <!-- FAQ VIEW -->
+            <div id="faq-view" class="hidden py-24">
+                <div class="max-w-3xl mx-auto px-4">
+                    <div class="text-center mb-16">
+                        <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs" data-i18n="faq_subtitle">Ho tro khach hang</p>
+                        <h2 class="serif text-4xl text-blue-900 mt-2" data-i18n="faq_title">Cau hoi thuong gap</h2>
+                    </div>
+                    <div id="faq-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- EVENTS VIEW -->
+            <div id="events-view" class="hidden py-24">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-center mb-16">
+                        <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs" data-i18n="events_subtitle">Tin tuc & Su kien</p>
+                        <h2 class="serif text-4xl text-blue-900 mt-2" data-i18n="events_title">Su kien sap toi</h2>
+                    </div>
+                    <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+                </div>
+            </div>
+
+            <!-- HEALTH VIEW -->
+            <div id="health-view" class="hidden py-24">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-center mb-16">
+                        <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs" data-i18n="health_subtitle">Kien thuc y hoc</p>
+                        <h2 class="serif text-4xl text-blue-900 mt-2" data-i18n="health_title">Thong tin suc khoe</h2>
+                    </div>
+                    <div id="health-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                </div>
+            </div>
+
+            <!-- ABOUT VIEW -->
+            <div id="about-view" class="hidden py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row items-center gap-16">
+                        <div class="flex-1 relative">
+                            <div class="absolute -top-10 -left-10 w-40 h-40 bg-emerald-50 rounded-full blur-3xl opacity-50"></div>
+                            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80" alt="Tradition" class="rounded-[3rem] shadow-2xl relative z-10 w-full object-cover aspect-square">
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-emerald-600 font-bold uppercase tracking-widest text-xs" data-i18n="about_journey">Hanh trinh Thien Duyen</span>
+                            <h2 class="serif text-4xl text-blue-900 mt-4 mb-8" data-i18n="about_title">Chuyen ve mot hieu thuoc<br>Luon coi benh nhan la nguoi nha</h2>
+                            <div class="space-y-6 text-stone-600 leading-relaxed text-lg">
+                                <p data-i18n="about_p1">Khoi dau tu nhung nam 1989, giua nhip song hoi ha cua Sai Gon xua, Thien Duyen Y Quan ra doi khong chi voi tu cach la mot hieu thuoc Dong Y, ma la noi gui gam niem hy vong cua nhung manh doi can duoc chua lanh.</p>
+                                <p data-i18n="about_p2">Chung toi goi moi goi thuoc la mot "ban tinh ca cua thao moc", noi moi vi thuoc Bac, vi thuoc Nam duoc tuyen chon ky luong bang doi tay cua nhung bac thay tam huyet. Tai Bao Ngoc, chung toi khong "ban" thuoc, chung toi trao di su an tam.</p>
+                                <p class="italic text-blue-900 font-bold" data-i18n="about_quote">"Y duc lam goc - Thien tam lam dau" khong chi la khau hieu, do la hoi tho trong tung cong thuc thuoc Luc Vi, Binh Vi ma ban cam tren tay hom nay.</p>
+                            </div>
+                            <div class="mt-10 grid grid-cols-3 gap-4">
+                                <div class="text-center p-4 bg-stone-50 rounded-2xl">
+                                    <p class="text-3xl font-black text-blue-900">35+</p>
+                                    <p class="text-xs text-stone-500 font-bold" data-i18n="about_years">Nam kinh nghiem</p>
+                                </div>
+                                <div class="text-center p-4 bg-stone-50 rounded-2xl">
+                                    <p class="text-3xl font-black text-emerald-700">50+</p>
+                                    <p class="text-xs text-stone-500 font-bold" data-i18n="about_products_count">San pham</p>
+                                </div>
+                                <div class="text-center p-4 bg-stone-50 rounded-2xl">
+                                    <p class="text-3xl font-black text-orange-600">10K+</p>
+                                    <p class="text-xs text-stone-500 font-bold" data-i18n="about_customers">Khach hang</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT VIEW -->
+            <div id="contact-view" class="hidden py-24">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-center mb-16">
+                        <p class="text-emerald-700 font-bold uppercase tracking-widest text-xs" data-i18n="contact_subtitle">Lien he voi chung toi</p>
+                        <h2 class="serif text-4xl text-blue-900 mt-2" data-i18n="contact_title">Thong tin lien he</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-6">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100">
+                                <h4 class="font-black text-blue-900 mb-6 text-lg" data-i18n="contact_info_title">Thong tin cua hang</h4>
+                                <div class="space-y-4">
+                                    <div class="flex gap-4 items-start">
+                                        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 text-emerald-700"></i></div>
+                                        <div>
+                                            <p class="font-bold text-sm text-blue-900" data-i18n="contact_address_label">Dia chi</p>
+                                            <p class="text-stone-500 text-sm" id="display-address">174 Hau Giang, phuong Binh Tay, TP.HCM</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4 items-start">
+                                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 text-blue-700"></i></div>
+                                        <div>
+                                            <p class="font-bold text-sm text-blue-900" data-i18n="contact_phone_label">Dien thoai</p>
+                                            <p class="text-stone-500 text-sm" id="display-phone">0817706606</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4 items-start">
+                                        <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0"><i data-lucide="mail" class="w-5 h-5 text-purple-700"></i></div>
+                                        <div>
+                                            <p class="font-bold text-sm text-blue-900">Email</p>
+                                            <p class="text-stone-500 text-sm" id="display-email">alpha@offisante.com.vn</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100">
+                                <h4 class="font-black text-blue-900 mb-4 text-lg" data-i18n="contact_hours_title">Gio lam viec</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between"><span class="text-stone-500" data-i18n="contact_weekday">Thu 2 - Thu 6</span><span class="font-bold text-blue-900">8:00 - 20:00</span></div>
+                                    <div class="flex justify-between"><span class="text-stone-500" data-i18n="contact_weekend">Thu 7 - Chu nhat</span><span class="font-bold text-blue-900">8:00 - 17:00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100">
+                            <h4 class="font-black text-blue-900 mb-6 text-lg" data-i18n="contact_form_title">Gui tin nhan</h4>
+                            <form onsubmit="submitContact(event)" class="space-y-4">
+                                <input type="text" placeholder="Ho va ten" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-emerald-500" data-i18n-placeholder="contact_name_ph">
+                                <input type="email" placeholder="Email" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-emerald-500">
+                                <input type="tel" placeholder="So dien thoai" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-emerald-500" data-i18n-placeholder="contact_phone_ph">
+                                <textarea placeholder="Noi dung tin nhan" rows="4" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-emerald-500 resize-none" data-i18n-placeholder="contact_msg_ph"></textarea>
+                                <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-950 transition" data-i18n="contact_send_btn">Gui tin nhan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- WALLET VIEW -->
             <div id="wallet-view" class="hidden py-24">
                 <div class="max-w-xl mx-auto px-4">
                     <div class="bg-blue-900 p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden mb-10">
                         <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
-                        <p class="text-blue-200 uppercase tracking-widest text-xs mb-2">Số dư ví tích lũy</p>
-                        <h3 id="balance-display" class="text-5xl font-black mb-10 tracking-tighter">0đ</h3>
+                        <p class="text-blue-200 uppercase tracking-widest text-xs mb-2" data-i18n="wallet_balance_label">So du vi tich luy</p>
+                        <h3 id="balance-display" class="text-5xl font-black mb-10 tracking-tighter">0d</h3>
                         <div class="flex justify-between items-center text-xs text-blue-300 font-bold border-t border-white/10 pt-6">
-                            <span>MÃ THẺ: BN-8686-2026</span>
-                            <span>OFFISANTÉ PREMIER</span>
+                            <span>MA THE: BN-8686-2026</span>
+                            <span>OFFISANTE PREMIER</span>
                         </div>
                     </div>
-
                     <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-stone-100">
                         <h4 class="text-xl font-black text-blue-900 mb-6 flex items-center gap-2">
                             <i data-lucide="zap" class="text-yellow-500 w-5 h-5"></i>
-                            Nạp tiền nhận lãi ngay
+                            <span data-i18n="wallet_topup_title">Nap tien nhan lai ngay</span>
                         </h4>
                         <div class="grid grid-cols-1 gap-4 mb-8">
                             <button onclick="topUp(200000)" class="flex justify-between items-center p-6 border-2 border-emerald-100 rounded-2xl bg-emerald-50/50 hover:bg-emerald-50 transition group">
                                 <div class="text-left">
-                                    <p class="font-black text-emerald-800 text-lg">200.000 VNĐ</p>
-                                    <p class="text-xs text-emerald-600 font-bold">Thưởng thêm: 10.000 VNĐ</p>
+                                    <p class="font-black text-emerald-800 text-lg">200.000 VND</p>
+                                    <p class="text-xs text-emerald-600 font-bold">+10.000 VND</p>
                                 </div>
                                 <i data-lucide="plus-circle" class="text-emerald-700 group-hover:scale-125 transition"></i>
                             </button>
                             <button onclick="topUp(500000)" class="flex justify-between items-center p-6 border-2 border-blue-100 rounded-2xl bg-blue-50/50 hover:bg-blue-50 transition group">
                                 <div class="text-left">
-                                    <p class="font-black text-blue-800 text-lg">500.000 VNĐ</p>
-                                    <p class="text-xs text-blue-600 font-bold uppercase tracking-widest">SIÊU ƯU ĐÃI: +25.000 VNĐ</p>
+                                    <p class="font-black text-blue-800 text-lg">500.000 VND</p>
+                                    <p class="text-xs text-blue-600 font-bold uppercase tracking-widest">+25.000 VND</p>
                                 </div>
                                 <i data-lucide="award" class="text-blue-700 group-hover:scale-125 transition"></i>
                             </button>
@@ -169,29 +323,27 @@
             <!-- CART VIEW -->
             <div id="cart-view" class="hidden py-24">
                 <div class="max-w-4xl mx-auto px-4">
-                    <h2 class="serif text-4xl text-blue-900 mb-10">Giỏ hàng của bạn</h2>
+                    <h2 class="serif text-4xl text-blue-900 mb-10" data-i18n="cart_title">Gio hang cua ban</h2>
                     <div class="flex flex-col lg:flex-row gap-10">
-                        <div id="cart-items" class="flex-grow space-y-4">
-                            <!-- Items will be here -->
-                        </div>
+                        <div id="cart-items" class="flex-grow space-y-4"></div>
                         <div class="lg:w-1/3">
                             <div class="bg-white p-8 rounded-3xl shadow-xl border border-stone-100 sticky top-28">
-                                <h4 class="font-bold text-lg mb-6 border-b pb-4">Tóm tắt đơn hàng</h4>
+                                <h4 class="font-bold text-lg mb-6 border-b pb-4" data-i18n="cart_summary">Tom tat don hang</h4>
                                 <div class="space-y-4 mb-8 text-sm">
                                     <div class="flex justify-between text-stone-500">
-                                        <span>Tạm tính</span>
-                                        <span id="subtotal">0đ</span>
+                                        <span data-i18n="cart_subtotal">Tam tinh</span>
+                                        <span id="subtotal">0d</span>
                                     </div>
                                     <div class="flex justify-between text-stone-500">
-                                        <span>Phí vận chuyển</span>
-                                        <span class="text-emerald-600 font-bold">MIỄN PHÍ</span>
+                                        <span data-i18n="cart_shipping">Phi van chuyen</span>
+                                        <span class="text-emerald-600 font-bold" data-i18n="cart_free">MIEN PHI</span>
                                     </div>
                                     <div class="flex justify-between font-black text-xl text-blue-900 border-t pt-4">
-                                        <span>Tổng cộng</span>
-                                        <span id="total-amount">0đ</span>
+                                        <span data-i18n="cart_total">Tong cong</span>
+                                        <span id="total-amount">0d</span>
                                     </div>
                                 </div>
-                                <button onclick="checkout()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-emerald-800 transition">Thanh toán & Xuất hóa đơn</button>
+                                <button onclick="checkout()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-emerald-800 transition" data-i18n="cart_checkout">Thanh toan</button>
                             </div>
                         </div>
                     </div>
@@ -201,7 +353,13 @@
             <!-- LUCKY DRAW VIEW -->
             <div id="luckydraw-view" class="hidden py-24">
                 <div class="max-w-4xl mx-auto px-4 flex flex-col items-center">
-                    <h2 class="serif text-4xl text-red-600 mb-10 italic">Tri ân khách hàng - Quay là trúng</h2>
+                    <!-- Countdown -->
+                    <div class="countdown-box text-white p-6 rounded-3xl mb-8 w-full max-w-md text-center shadow-xl">
+                        <p class="text-xs uppercase tracking-widest opacity-80 mb-2" data-i18n="spin_countdown_label">Chuong trinh ket thuc sau</p>
+                        <div id="countdown-timer" class="text-3xl font-black tracking-wider">00:00:00:00</div>
+                        <p class="text-xs opacity-70 mt-2" data-i18n="spin_end_date">Ket thuc: 15/08/2026</p>
+                    </div>
+                    <h2 class="serif text-4xl text-red-600 mb-10 italic" data-i18n="spin_title">Tri an khach hang - Quay la trung</h2>
                     <div id="luckydraw-content" class="flex flex-col lg:flex-row items-center gap-16">
                         <div class="relative">
                             <div class="pointer"></div>
@@ -211,38 +369,123 @@
                             <button id="spin-btn" class="absolute inset-0 m-auto w-16 h-16 bg-white rounded-full shadow-xl border-4 border-yellow-400 z-40 flex items-center justify-center font-black text-blue-900 text-xs">QUAY</button>
                         </div>
                         <div class="w-full max-w-sm bg-white p-8 rounded-[2rem] shadow-xl border border-stone-100">
-                            <h4 class="font-black text-blue-900 mb-4 uppercase tracking-widest text-xs">Lượt quay khả dụng</h4>
+                            <h4 class="font-black text-blue-900 mb-4 uppercase tracking-widest text-xs" data-i18n="spin_turns_label">Luot quay kha dung</h4>
                             <div class="text-4xl font-black text-red-600 mb-6" id="turns-display">0</div>
-                            <p class="text-sm text-stone-500 mb-8 leading-relaxed">Đăng ký hoặc chia sẻ để nhận lượt quay miễn phí.</p>
+                            <p class="text-sm text-stone-500 mb-8 leading-relaxed" data-i18n="spin_register_desc">Dang ky hoac chia se de nhan luot quay mien phi.</p>
                             <form id="draw-register-form" class="space-y-3 mb-6">
-                                <input type="text" id="reg-name" placeholder="Tên của bạn" class="w-full p-4 bg-stone-50 border rounded-xl outline-none text-sm">
-                                <input type="tel" id="reg-phone" placeholder="Số điện thoại" class="w-full p-4 bg-stone-50 border rounded-xl outline-none text-sm">
-                                <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 rounded-xl hover:bg-blue-950">Nhận lượt ngay</button>
+                                <input type="text" id="reg-name" placeholder="Ten cua ban" class="w-full p-4 bg-stone-50 border rounded-xl outline-none text-sm">
+                                <input type="tel" id="reg-phone" placeholder="So dien thoai" class="w-full p-4 bg-stone-50 border rounded-xl outline-none text-sm">
+                                <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 rounded-xl hover:bg-blue-950" data-i18n="spin_register_btn">Nhan luot ngay</button>
                             </form>
-                            <button id="share-btn" class="w-full border-2 border-emerald-100 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-50 transition">+1 Lượt Chia Sẻ</button>
+                            <button id="share-btn" class="w-full border-2 border-emerald-100 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-50 transition" data-i18n="spin_share_btn">+1 Luot Chia Se</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ADMIN VIEW -->
-            <div id="admin-view" class="hidden py-24 px-4 max-w-6xl mx-auto">
-                <h2 class="serif text-4xl text-blue-900 mb-10">Dữ liệu khách hàng</h2>
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-stone-100">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-stone-50 border-b border-stone-100">
-                            <tr>
-                                <th class="p-6 font-black uppercase text-stone-400 tracking-widest">Họ Tên</th>
-                                <th class="p-6 font-black uppercase text-stone-400 tracking-widest">SĐT</th>
-                                <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-center">Quà tặng</th>
-                                <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-right">Ngày quay</th>
-                            </tr>
-                        </thead>
-                        <tbody id="winner-list"></tbody>
-                    </table>
+            <!-- ADMIN LOGIN VIEW -->
+            <div id="admin-login-view" class="hidden py-24">
+                <div class="max-w-md mx-auto px-4">
+                    <div class="bg-white p-10 rounded-3xl shadow-2xl border border-stone-100 text-center">
+                        <div class="w-20 h-20 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="shield-check" class="w-10 h-10 text-yellow-500"></i>
+                        </div>
+                        <h2 class="serif text-3xl text-blue-900 mb-2">Admin Panel</h2>
+                        <p class="text-stone-500 text-sm mb-8">Dang nhap de quan ly noi dung trang web</p>
+                        <form onsubmit="adminLoginSubmit(event)" class="space-y-4">
+                            <input type="password" id="admin-password" placeholder="Nhap mat khau admin" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-center text-lg tracking-widest focus:border-blue-500">
+                            <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-950 transition">Dang nhap</button>
+                        </form>
+                        <p id="admin-error" class="text-red-500 text-sm mt-4 hidden">Sai mat khau!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN DASHBOARD VIEW -->
+            <div id="admin-view" class="hidden py-24 px-4 max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Sidebar -->
+                    <div class="admin-sidebar bg-white rounded-3xl shadow-xl border border-stone-100 p-6 h-fit lg:sticky lg:top-28">
+                        <div class="flex items-center gap-3 mb-8 pb-6 border-b">
+                            <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center"><i data-lucide="shield" class="w-5 h-5 text-yellow-500"></i></div>
+                            <div>
+                                <p class="font-bold text-blue-900 text-sm">Admin Panel</p>
+                                <p class="text-[10px] text-stone-400">Quan ly noi dung</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="switchAdminTab('admin-products')" class="admin-tab active w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition flex items-center gap-3">
+                                <i data-lucide="package" class="w-4 h-4"></i> San pham
+                            </button>
+                            <button onclick="switchAdminTab('admin-contact')" class="admin-tab w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition flex items-center gap-3">
+                                <i data-lucide="map-pin" class="w-4 h-4"></i> Lien he
+                            </button>
+                            <button onclick="switchAdminTab('admin-winners')" class="admin-tab w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition flex items-center gap-3">
+                                <i data-lucide="trophy" class="w-4 h-4"></i> KH trung thuong
+                            </button>
+                            <button onclick="adminLogout()" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-red-600 hover:bg-red-50 transition flex items-center gap-3 mt-6">
+                                <i data-lucide="log-out" class="w-4 h-4"></i> Dang xuat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Content -->
+                    <div class="flex-grow">
+                        <!-- Admin Products -->
+                        <div id="admin-products" class="admin-content">
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-2xl font-black text-blue-900">Quan ly san pham</h2>
+                                <button onclick="showAddProduct()" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-emerald-700 transition flex items-center gap-2">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Them SP
+                                </button>
+                            </div>
+                            <div id="admin-product-list" class="space-y-4"></div>
+                        </div>
+
+                        <!-- Admin Contact -->
+                        <div id="admin-contact" class="admin-content hidden">
+                            <h2 class="text-2xl font-black text-blue-900 mb-8">Chinh sua thong tin lien he</h2>
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100">
+                                <form onsubmit="saveContactInfo(event)" class="space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-blue-900 mb-2">Dia chi</label>
+                                        <input type="text" id="edit-address" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-blue-500" value="174 Hau Giang, phuong Binh Tay, TP.HCM">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-blue-900 mb-2">So dien thoai</label>
+                                        <input type="text" id="edit-phone" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-blue-500" value="0817706606">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-blue-900 mb-2">Email</label>
+                                        <input type="email" id="edit-email" class="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm focus:border-blue-500" value="alpha@offisante.com.vn">
+                                    </div>
+                                    <button type="submit" class="bg-blue-900 text-white font-bold px-8 py-4 rounded-xl hover:bg-blue-950 transition">Luu thay doi</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Admin Winners -->
+                        <div id="admin-winners" class="admin-content hidden">
+                            <h2 class="text-2xl font-black text-blue-900 mb-8">Khach hang trung thuong</h2>
+                            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-stone-100">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="bg-stone-50 border-b border-stone-100">
+                                        <tr>
+                                            <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-xs">Ho Ten</th>
+                                            <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-xs">SDT</th>
+                                            <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-xs text-center">Qua tang</th>
+                                            <th class="p-6 font-black uppercase text-stone-400 tracking-widest text-xs text-right">Ngay quay</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="winner-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
+
 
         <!-- Footer -->
         <footer class="bg-blue-950 text-white pt-24 pb-12">
@@ -251,54 +494,72 @@
                     <div>
                         <div class="flex items-center gap-3 mb-8">
                             <div class="bg-white p-2 rounded-full"><i data-lucide="leaf" class="text-blue-900 w-6 h-6"></i></div>
-                            <h5 class="serif text-2xl tracking-tighter italic">Thiện Duyên Y Quán</h5>
+                            <h5 class="serif text-2xl tracking-tighter italic">Thien Duyen Y Quan</h5>
                         </div>
-                        <p class="text-blue-200/70 leading-relaxed mb-8">Gói ghém tâm tình trong từng vị thuốc. Chúng tôi tin rằng y đức là nền tảng bền vững nhất của sự sống.</p>
+                        <p class="text-blue-200/70 leading-relaxed mb-8" data-i18n="footer_desc">Goi ghem tam tinh trong tung vi thuoc. Chung toi tin rang y duc la nen tang ben vung nhat cua su song.</p>
                         <div class="flex space-x-4">
                             <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-blue-900 transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
                             <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-blue-900 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
                             <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-blue-900 transition"><i data-lucide="youtube" class="w-5 h-5"></i></a>
                         </div>
                     </div>
-                    
                     <div class="space-y-6">
-                        <h6 class="font-bold uppercase tracking-widest text-yellow-500">Liên hệ trực tiếp</h6>
+                        <h6 class="font-bold uppercase tracking-widest text-yellow-500" data-i18n="footer_contact_title">Lien he truc tiep</h6>
                         <ul class="space-y-4 text-blue-100/80">
-                            <li class="flex gap-4">
-                                <i data-lucide="map-pin" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
-                                <span>174 Hậu Giang, phường Bình Tây, TP.HCM</span>
-                            </li>
-                            <li class="flex gap-4">
-                                <i data-lucide="phone-call" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
-                                <span>Hotline: 0817706606</span>
-                            </li>
-                            <li class="flex gap-4">
-                                <i data-lucide="mail" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
-                                <span>alpha@offisante.com.vn</span>
-                            </li>
+                            <li class="flex gap-4"><i data-lucide="map-pin" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i><span id="footer-address">174 Hau Giang, phuong Binh Tay, TP.HCM</span></li>
+                            <li class="flex gap-4"><i data-lucide="phone-call" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i><span id="footer-phone">Hotline: 0817706606</span></li>
+                            <li class="flex gap-4"><i data-lucide="mail" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i><span id="footer-email">alpha@offisante.com.vn</span></li>
                         </ul>
                     </div>
-
                     <div class="space-y-6">
-                        <h6 class="font-bold uppercase tracking-widest text-yellow-500">Chính sách & Pháp lý</h6>
+                        <h6 class="font-bold uppercase tracking-widest text-yellow-500" data-i18n="footer_policy_title">Chinh sach & Phap ly</h6>
                         <ul class="space-y-2 text-sm text-blue-200/60">
-                            <li>Chính sách vận chuyển hỏa tốc</li>
-                            <li>Chính sách bảo mật dữ liệu</li>
-                            <li>Thông tin thương nhân công bố sản phẩm</li>
-                            <li>Giấy chứng nhận GMP & ISO</li>
+                            <li data-i18n="footer_policy1">Chinh sach van chuyen hoa toc</li>
+                            <li data-i18n="footer_policy2">Chinh sach bao mat du lieu</li>
+                            <li data-i18n="footer_policy3">Thong tin thuong nhan cong bo san pham</li>
+                            <li data-i18n="footer_policy4">Giay chung nhan GMP & ISO</li>
                         </ul>
-                        <div class="pt-6">
-                            <img src="https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=200" alt="Certified" class="h-8 opacity-40">
-                        </div>
                     </div>
                 </div>
-
                 <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-blue-300 font-bold uppercase tracking-widest">
-                    <p>© 2026 CÔNG TY TNHH MTV OFFISANTÉ BẢO NGỌC VN</p>
-                    <button onclick="adminLogin()" class="mt-4 md:mt-0 hover:text-white transition">Admin Dashboard</button>
+                    <p>&copy; 2026 CONG TY TNHH MTV OFFISANTE BAO NGOC VN</p>
+                    <button onclick="switchTab('admin-login')" class="mt-4 md:mt-0 hover:text-white transition">Admin Dashboard</button>
                 </div>
             </div>
         </footer>
+
+        <!-- Product Edit Modal -->
+        <div id="product-modal" class="modal-backdrop hidden">
+            <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black text-blue-900" id="product-modal-title">Them san pham</h3>
+                    <button onclick="hideProductModal()" class="p-2 hover:bg-stone-100 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                <form onsubmit="saveProduct(event)" class="space-y-4">
+                    <input type="hidden" id="edit-product-id">
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-1">Ten san pham</label>
+                        <input type="text" id="edit-product-name" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-1">Gia ban (VND)</label>
+                        <input type="number" id="edit-product-price" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-1">Mo ta</label>
+                        <textarea id="edit-product-desc" rows="3" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-1">Link hinh anh</label>
+                        <input type="url" id="edit-product-img" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl outline-none text-sm" placeholder="https://...">
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-grow bg-blue-900 text-white font-bold py-3 rounded-xl hover:bg-blue-950 transition">Luu</button>
+                        <button type="button" onclick="hideProductModal()" class="px-6 bg-stone-100 text-stone-600 font-bold py-3 rounded-xl hover:bg-stone-200 transition">Huy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Payment Modal -->
         <div id="payment-modal" class="modal-backdrop hidden">
@@ -308,11 +569,11 @@
                         <img id="payment-qr" src="" alt="QR Code" class="w-48 h-48">
                     </div>
                 </div>
-                <h3 class="text-xl font-black text-blue-900 mb-2">Quét để thanh toán</h3>
-                <p class="text-sm text-stone-500 mb-8">Nội dung: <span id="payment-memo" class="font-bold text-blue-800"></span></p>
+                <h3 class="text-xl font-black text-blue-900 mb-2" data-i18n="payment_scan">Quet de thanh toan</h3>
+                <p class="text-sm text-stone-500 mb-8">Noi dung: <span id="payment-memo" class="font-bold text-blue-800"></span></p>
                 <div class="flex gap-2">
-                    <button onclick="confirmPayment()" class="flex-grow bg-blue-900 text-white font-bold py-4 rounded-2xl">Đã chuyển khoản</button>
-                    <button onclick="hideModals()" class="px-6 bg-stone-100 text-stone-500 font-bold py-4 rounded-2xl">Hủy</button>
+                    <button onclick="confirmPayment()" class="flex-grow bg-blue-900 text-white font-bold py-4 rounded-2xl" data-i18n="payment_confirm">Da chuyen khoan</button>
+                    <button onclick="hideModals()" class="px-6 bg-stone-100 text-stone-500 font-bold py-4 rounded-2xl" data-i18n="payment_cancel">Huy</button>
                 </div>
             </div>
         </div>
@@ -320,16 +581,16 @@
         <!-- Result Modal -->
         <div id="result-modal" class="modal-backdrop hidden">
             <div class="bg-white p-10 rounded-[3rem] text-center max-w-sm w-full mx-4 shadow-2xl border-b-8 border-yellow-500">
-                <div class="text-5xl mb-6" id="modal-emoji">🎉</div>
-                <h2 class="text-2xl font-black text-blue-900 mb-2" id="modal-status">THÀNH CÔNG!</h2>
+                <div class="text-5xl mb-6" id="modal-emoji">&#127881;</div>
+                <h2 class="text-2xl font-black text-blue-900 mb-2" id="modal-status">THANH CONG!</h2>
                 <div id="modal-body" class="text-xl font-bold text-red-600 mb-8 p-6 bg-red-50 rounded-3xl border-2 border-red-100"></div>
-                <button id="close-modal" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl transition hover:bg-black">TIẾP TỤC</button>
+                <button id="close-modal" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl transition hover:bg-black" data-i18n="modal_continue">TIEP TUC</button>
             </div>
         </div>
 
         <!-- Floating UI -->
         <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-40">
-            <a href="tel:0817706606" class="w-14 h-14 bg-red-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition"><i data-lucide="phone-call"></i></a>
+            <a href="tel:0817706606" id="float-phone" class="w-14 h-14 bg-red-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition"><i data-lucide="phone-call"></i></a>
             <button onclick="switchTab('cart')" class="w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition relative">
                 <i data-lucide="shopping-cart"></i>
                 <span class="cart-badge absolute -top-1 -right-1 bg-white text-emerald-600 text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-emerald-600">0</span>
@@ -337,11 +598,11 @@
         </div>
     </div>
 
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, orderBy, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAwuifQ6wA3OAfnIjebObv0Nmw9LsDs2-g",
             authDomain: "vong-quay-may-man-5eceb.firebaseapp.com",
@@ -355,39 +616,258 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // State
+        // ===== STATE =====
         let balance = 0;
         let cart = [];
         let prizes = [];
         let currentUser = null;
+        let currentLang = 'vi';
+        let isAdmin = false;
+        const ADMIN_PASSWORD = 'BaoNgoc@2026';
 
-        const PRODUCTS = [
-            { id: '1', name: 'Lục Vị YHCT (Chai 140v)', price: 180000, img: 'https://images.unsplash.com/photo-1512036666432-2181c1f26420?w=300', desc: 'Hỗ trợ cân bằng âm dương, dưỡng thận âm.' },
-            { id: '2', name: 'Bình Vị YHCT (100 viên)', price: 150000, img: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?w=300', desc: 'Hỗ trợ tiêu hóa, đau dạ dày.' },
-            { id: '3', name: 'Tiêu Trĩ Q (Hộp 30v)', price: 210000, img: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?w=300', desc: 'Giảm triệu chứng trĩ nội, trĩ ngoại.' },
-            { id: '4', name: 'Dầu Sâm Lăn 10ml', price: 45000, img: 'https://images.unsplash.com/photo-1611073103233-a8c63f10a8d4?w=300', desc: 'Tinh hoa bách thảo Việt.' },
-            { id: '5', name: 'Cao Lỏng Ngâm Chân', price: 95000, img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300', desc: 'Thư giãn, lưu thông khí huyết.' },
-            { id: '6', name: 'Độc Hoạt Tang Ký Sinh', price: 220000, img: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=300', desc: 'Hỗ trợ đau nhức xương khớp.' },
-            { id: '7', name: 'Bổ Thận Hoàn (Vàng)', price: 195000, img: 'https://images.unsplash.com/photo-1512061213970-1376822c1074?w=300', desc: 'Tăng cường chức năng thận.' },
-            { id: '8', name: 'Cholessen Liperton', price: 250000, img: 'https://images.unsplash.com/photo-1471864190281-ad5f9f81ce8a?w=300', desc: 'Giảm mỡ máu toàn diện.' }
+        let PRODUCTS = JSON.parse(localStorage.getItem('bn_products')) || [
+            { id: '1', name: 'Luc Vi YHCT (Chai 140v)', price: 180000, img: 'https://images.unsplash.com/photo-1512036666432-2181c1f26420?w=300', desc: 'Ho tro can bang am duong, duong than am.' },
+            { id: '2', name: 'Binh Vi YHCT (100 vien)', price: 150000, img: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?w=300', desc: 'Ho tro tieu hoa, dau da day.' },
+            { id: '3', name: 'Tieu Tri Q (Hop 30v)', price: 210000, img: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?w=300', desc: 'Giam trieu chung tri noi, tri ngoai.' },
+            { id: '4', name: 'Dau Sam Lan 10ml', price: 45000, img: 'https://images.unsplash.com/photo-1611073103233-a8c63f10a8d4?w=300', desc: 'Tinh hoa bach thao Viet.' },
+            { id: '5', name: 'Cao Long Ngam Chan', price: 95000, img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300', desc: 'Thu gian, luu thong khi huyet.' },
+            { id: '6', name: 'Doc Hoat Tang Ky Sinh', price: 220000, img: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=300', desc: 'Ho tro dau nhuc xuong khop.' },
+            { id: '7', name: 'Bo Than Hoan (Vang)', price: 195000, img: 'https://images.unsplash.com/photo-1512061213970-1376822c1074?w=300', desc: 'Tang cuong chuc nang than.' },
+            { id: '8', name: 'Cholessen Liperton', price: 250000, img: 'https://images.unsplash.com/photo-1471864190281-ad5f9f81ce8a?w=300', desc: 'Giam mo mau toan dien.' }
         ];
+
+        let contactInfo = JSON.parse(localStorage.getItem('bn_contact')) || {
+            address: '174 Hau Giang, phuong Binh Tay, TP.HCM',
+            phone: '0817706606',
+            email: 'alpha@offisante.com.vn'
+        };
 
         const PRIZE_POOL = [
-            { id: 'p1', name: '10.000đ', quantity: 83, weight: 45, color: '#3b82f6' },
-            { id: 'p2', name: '20.000đ', quantity: 79, weight: 45, color: '#8b5cf6' },
-            { id: 'p3', name: '50.000đ', quantity: 94, weight: 10, color: '#f43f5e' },
-            { id: 'p4', name: '100.000đ', quantity: 92, weight: 10, color: '#1e293b' },
+            { id: 'p1', name: '10.000d', quantity: 83, weight: 45, color: '#3b82f6' },
+            { id: 'p2', name: '20.000d', quantity: 79, weight: 45, color: '#8b5cf6' },
+            { id: 'p3', name: '50.000d', quantity: 94, weight: 10, color: '#f43f5e' },
+            { id: 'p4', name: '100.000d', quantity: 92, weight: 10, color: '#1e293b' },
             { id: 'p5', name: 'KF94 BBT', quantity: 99, weight: 250, color: '#10b981' },
-            { id: 'p6', name: 'Kẹo Star', quantity: 99, weight: 250, color: '#f59e0b' },
-            { id: 'p7', name: 'Lần sau nhé', quantity: 999, weight: 390, color: '#94a3b8' }
+            { id: 'p6', name: 'Keo Star', quantity: 99, weight: 250, color: '#f59e0b' },
+            { id: 'p7', name: 'Lan sau nhe', quantity: 999, weight: 390, color: '#94a3b8' }
         ];
 
-        // Core Functions
+
+        // ===== TRANSLATIONS =====
+        const TRANSLATIONS = {
+            vi: {
+                nav_home: 'Trang chu', nav_products: 'San pham', nav_faq: 'Cau hoi thuong gap',
+                nav_events: 'Su kien', nav_health: 'Suc khoe', nav_about: 'Gioi thieu',
+                nav_contact: 'Lien he', nav_spin: 'Quay so',
+                hero_since: 'Tu 1989 - Bao Ngoc Pharmaceutical',
+                hero_title: 'Y duc lam goc<br>Thien tam lam dau',
+                hero_desc: 'Goi ghem tam tinh trong tung vi thuoc - Cham soc suc khoe gia dinh Viet bang tinh hoa Dong Y.',
+                hero_btn_buy: 'Mua thuoc ngay', hero_btn_spin: 'Quay so trung qua',
+                quick_products: 'San pham', quick_events: 'Su kien', quick_health: 'Suc khoe', quick_contact: 'Lien he',
+                products_subtitle: 'San pham noi bat', products_title: 'Tinh hoa thao moc Bao Ngoc',
+                faq_subtitle: 'Ho tro khach hang', faq_title: 'Cau hoi thuong gap',
+                events_subtitle: 'Tin tuc & Su kien', events_title: 'Su kien sap toi',
+                health_subtitle: 'Kien thuc y hoc', health_title: 'Thong tin suc khoe',
+                about_journey: 'Hanh trinh Thien Duyen',
+                about_title: 'Chuyen ve mot hieu thuoc<br>Luon coi benh nhan la nguoi nha',
+                about_p1: 'Khoi dau tu nhung nam 1989, giua nhip song hoi ha cua Sai Gon xua, Thien Duyen Y Quan ra doi khong chi voi tu cach la mot hieu thuoc Dong Y, ma la noi gui gam niem hy vong cua nhung manh doi can duoc chua lanh.',
+                about_p2: 'Chung toi goi moi goi thuoc la mot "ban tinh ca cua thao moc", noi moi vi thuoc Bac, vi thuoc Nam duoc tuyen chon ky luong. Tai Bao Ngoc, chung toi khong "ban" thuoc, chung toi trao di su an tam.',
+                about_quote: '"Y duc lam goc - Thien tam lam dau" khong chi la khau hieu, do la hoi tho trong tung cong thuc thuoc.',
+                about_years: 'Nam kinh nghiem', about_products_count: 'San pham', about_customers: 'Khach hang',
+                contact_subtitle: 'Lien he voi chung toi', contact_title: 'Thong tin lien he',
+                contact_info_title: 'Thong tin cua hang', contact_address_label: 'Dia chi',
+                contact_phone_label: 'Dien thoai', contact_hours_title: 'Gio lam viec',
+                contact_weekday: 'Thu 2 - Thu 6', contact_weekend: 'Thu 7 - Chu nhat',
+                contact_form_title: 'Gui tin nhan', contact_send_btn: 'Gui tin nhan',
+                contact_name_ph: 'Ho va ten', contact_phone_ph: 'So dien thoai', contact_msg_ph: 'Noi dung tin nhan',
+                wallet_balance_label: 'So du vi tich luy', wallet_topup_title: 'Nap tien nhan lai ngay',
+                cart_title: 'Gio hang cua ban', cart_summary: 'Tom tat don hang',
+                cart_subtotal: 'Tam tinh', cart_shipping: 'Phi van chuyen', cart_free: 'MIEN PHI',
+                cart_total: 'Tong cong', cart_checkout: 'Thanh toan',
+                spin_countdown_label: 'Chuong trinh ket thuc sau', spin_end_date: 'Ket thuc: 15/08/2026',
+                spin_title: 'Tri an khach hang - Quay la trung',
+                spin_turns_label: 'Luot quay kha dung', spin_register_desc: 'Dang ky hoac chia se de nhan luot quay mien phi.',
+                spin_register_btn: 'Nhan luot ngay', spin_share_btn: '+1 Luot Chia Se',
+                footer_desc: 'Goi ghem tam tinh trong tung vi thuoc. Chung toi tin rang y duc la nen tang ben vung nhat.',
+                footer_contact_title: 'Lien he truc tiep', footer_policy_title: 'Chinh sach & Phap ly',
+                footer_policy1: 'Chinh sach van chuyen hoa toc', footer_policy2: 'Chinh sach bao mat du lieu',
+                footer_policy3: 'Thong tin thuong nhan cong bo SP', footer_policy4: 'Giay chung nhan GMP & ISO',
+                payment_scan: 'Quet de thanh toan', payment_confirm: 'Da chuyen khoan', payment_cancel: 'Huy',
+                modal_continue: 'TIEP TUC'
+            },
+            en: {
+                nav_home: 'Home', nav_products: 'Products', nav_faq: 'FAQ',
+                nav_events: 'Events', nav_health: 'Health Tips', nav_about: 'About Us',
+                nav_contact: 'Contact', nav_spin: 'Lucky Draw',
+                hero_since: 'Since 1989 - Bao Ngoc Pharmaceutical',
+                hero_title: 'Medical Ethics First<br>Kindness at Heart',
+                hero_desc: 'Putting love into every herbal remedy - Caring for Vietnamese families with traditional medicine excellence.',
+                hero_btn_buy: 'Shop Now', hero_btn_spin: 'Lucky Spin',
+                quick_products: 'Products', quick_events: 'Events', quick_health: 'Health', quick_contact: 'Contact',
+                products_subtitle: 'Featured Products', products_title: 'Bao Ngoc Herbal Excellence',
+                faq_subtitle: 'Customer Support', faq_title: 'Frequently Asked Questions',
+                events_subtitle: 'News & Events', events_title: 'Upcoming Events',
+                health_subtitle: 'Medical Knowledge', health_title: 'Health Information',
+                about_journey: 'The Thien Duyen Journey',
+                about_title: 'Story of a pharmacy<br>That treats patients like family',
+                about_p1: 'Starting from 1989, amidst the bustling life of old Saigon, Thien Duyen Y Quan was born not just as a traditional medicine shop, but as a place of hope for those in need of healing.',
+                about_p2: 'We call each medicine package a "love song of herbs", where every ingredient is carefully selected by master herbalists. At Bao Ngoc, we do not "sell" medicine, we deliver peace of mind.',
+                about_quote: '"Medical ethics first - Kindness at heart" is not just a slogan, it is the soul in every formula.',
+                about_years: 'Years experience', about_products_count: 'Products', about_customers: 'Customers',
+                contact_subtitle: 'Get in touch', contact_title: 'Contact Information',
+                contact_info_title: 'Store Information', contact_address_label: 'Address',
+                contact_phone_label: 'Phone', contact_hours_title: 'Working Hours',
+                contact_weekday: 'Mon - Fri', contact_weekend: 'Sat - Sun',
+                contact_form_title: 'Send a Message', contact_send_btn: 'Send Message',
+                contact_name_ph: 'Full name', contact_phone_ph: 'Phone number', contact_msg_ph: 'Your message',
+                wallet_balance_label: 'Wallet Balance', wallet_topup_title: 'Top up & earn bonus',
+                cart_title: 'Your Cart', cart_summary: 'Order Summary',
+                cart_subtotal: 'Subtotal', cart_shipping: 'Shipping', cart_free: 'FREE',
+                cart_total: 'Total', cart_checkout: 'Checkout',
+                spin_countdown_label: 'Program ends in', spin_end_date: 'Ends: Aug 15, 2026',
+                spin_title: 'Customer Appreciation - Spin to Win',
+                spin_turns_label: 'Available Spins', spin_register_desc: 'Register or share to get free spins.',
+                spin_register_btn: 'Get Spins Now', spin_share_btn: '+1 Share Spin',
+                footer_desc: 'Putting heart into every medicine. We believe medical ethics is the strongest foundation.',
+                footer_contact_title: 'Direct Contact', footer_policy_title: 'Policies & Legal',
+                footer_policy1: 'Express Shipping Policy', footer_policy2: 'Data Privacy Policy',
+                footer_policy3: 'Product Declaration Info', footer_policy4: 'GMP & ISO Certification',
+                payment_scan: 'Scan to Pay', payment_confirm: 'Payment Done', payment_cancel: 'Cancel',
+                modal_continue: 'CONTINUE'
+            },
+            fr: {
+                nav_home: 'Accueil', nav_products: 'Produits', nav_faq: 'FAQ',
+                nav_events: 'Evenements', nav_health: 'Sante', nav_about: 'A propos',
+                nav_contact: 'Contact', nav_spin: 'Tirage',
+                hero_since: 'Depuis 1989 - Bao Ngoc Pharmaceutical',
+                hero_title: 'Ethique medicale<br>Bienveillance au coeur',
+                hero_desc: 'Mettre de l\'amour dans chaque remede - Prendre soin des familles vietnamiennes avec la medecine traditionnelle.',
+                hero_btn_buy: 'Acheter', hero_btn_spin: 'Tirage au sort',
+                quick_products: 'Produits', quick_events: 'Evenements', quick_health: 'Sante', quick_contact: 'Contact',
+                products_subtitle: 'Produits vedettes', products_title: 'Excellence herbale Bao Ngoc',
+                faq_subtitle: 'Support client', faq_title: 'Questions frequentes',
+                events_subtitle: 'Actualites', events_title: 'Evenements a venir',
+                health_subtitle: 'Connaissances medicales', health_title: 'Informations sante',
+                about_journey: 'Le voyage Thien Duyen',
+                about_title: 'L\'histoire d\'une pharmacie<br>Qui traite les patients comme une famille',
+                about_p1: 'Depuis 1989, au coeur de l\'ancienne Saigon, Thien Duyen Y Quan est ne non seulement comme une pharmacie traditionnelle, mais comme un lieu d\'espoir pour ceux qui ont besoin de guerison.',
+                about_p2: 'Nous appelons chaque paquet de medicaments un "chant d\'amour des herbes". Chez Bao Ngoc, nous ne "vendons" pas de medicaments, nous offrons la tranquillite d\'esprit.',
+                about_quote: '"L\'ethique medicale d\'abord" n\'est pas qu\'un slogan, c\'est l\'ame de chaque formule.',
+                about_years: 'Ans d\'experience', about_products_count: 'Produits', about_customers: 'Clients',
+                contact_subtitle: 'Nous contacter', contact_title: 'Informations de contact',
+                contact_info_title: 'Infos magasin', contact_address_label: 'Adresse',
+                contact_phone_label: 'Telephone', contact_hours_title: 'Heures d\'ouverture',
+                contact_weekday: 'Lun - Ven', contact_weekend: 'Sam - Dim',
+                contact_form_title: 'Envoyer un message', contact_send_btn: 'Envoyer',
+                contact_name_ph: 'Nom complet', contact_phone_ph: 'Telephone', contact_msg_ph: 'Votre message',
+                wallet_balance_label: 'Solde du portefeuille', wallet_topup_title: 'Recharger et gagner',
+                cart_title: 'Votre Panier', cart_summary: 'Resume de la commande',
+                cart_subtotal: 'Sous-total', cart_shipping: 'Livraison', cart_free: 'GRATUIT',
+                cart_total: 'Total', cart_checkout: 'Payer',
+                spin_countdown_label: 'Le programme se termine dans', spin_end_date: 'Fin: 15 aout 2026',
+                spin_title: 'Remerciement clients - Tournez et gagnez',
+                spin_turns_label: 'Tours disponibles', spin_register_desc: 'Inscrivez-vous ou partagez pour des tours gratuits.',
+                spin_register_btn: 'Obtenir des tours', spin_share_btn: '+1 Tour Partage',
+                footer_desc: 'Mettre du coeur dans chaque medicament. L\'ethique medicale est notre fondation.',
+                footer_contact_title: 'Contact direct', footer_policy_title: 'Politiques & Legal',
+                footer_policy1: 'Politique de livraison express', footer_policy2: 'Politique de confidentialite',
+                footer_policy3: 'Declaration des produits', footer_policy4: 'Certification GMP & ISO',
+                payment_scan: 'Scanner pour payer', payment_confirm: 'Paiement effectue', payment_cancel: 'Annuler',
+                modal_continue: 'CONTINUER'
+            }
+        };
+
+
+        // ===== FAQ DATA =====
+        const FAQ_DATA = {
+            vi: [
+                { q: 'San pham co nguon goc tu dau?', a: 'Tat ca san pham deu duoc san xuat tai nha may dat chuan GMP-WHO, nguyen lieu thao duoc nhap khau va trong nuoc duoc kiem dinh chat luong nghiem ngat.' },
+                { q: 'Thoi gian giao hang la bao lau?', a: 'Noi thanh TP.HCM: 1-2 ngay. Cac tinh thanh khac: 3-5 ngay lam viec. Mien phi van chuyen cho don hang tren 300.000d.' },
+                { q: 'Chinh sach doi tra nhu the nao?', a: 'Chung toi ho tro doi tra trong 7 ngay neu san pham bi loi hoac khong dung mo ta. Vui long giu nguyen bao bi va hoa don.' },
+                { q: 'Co the mua truc tiep tai cua hang khong?', a: 'Co! Quy khach co the den truc tiep tai 174 Hau Giang, P. Binh Tay, TP.HCM de duoc tu van va mua hang.' },
+                { q: 'San pham co phu hop voi nguoi cao tuoi?', a: 'Hau het san pham deu phu hop voi nguoi cao tuoi. Tuy nhien, nen tham khao y kien bac si truoc khi su dung.' },
+                { q: 'Lam sao de biet san pham chinh hang?', a: 'Moi san pham deu co tem chong gia, ma QR kiem tra va giay chung nhan GMP. Quy khach co the quet ma tren bao bi de xac minh.' }
+            ],
+            en: [
+                { q: 'Where do the products come from?', a: 'All products are manufactured at GMP-WHO certified factories. Herbal ingredients are imported and domestically sourced with strict quality control.' },
+                { q: 'How long does delivery take?', a: 'Ho Chi Minh City: 1-2 days. Other provinces: 3-5 business days. Free shipping for orders over 300,000 VND.' },
+                { q: 'What is the return policy?', a: 'We support returns within 7 days if the product is defective or not as described. Please keep original packaging and invoice.' },
+                { q: 'Can I buy directly at the store?', a: 'Yes! You can visit us at 174 Hau Giang, Binh Tay Ward, HCMC for consultation and purchase.' },
+                { q: 'Are products suitable for elderly?', a: 'Most products are suitable for elderly. However, please consult a doctor before use.' },
+                { q: 'How to verify authentic products?', a: 'Each product has anti-counterfeit stamps, QR codes, and GMP certificates. Scan the code on packaging to verify.' }
+            ],
+            fr: [
+                { q: 'D\'ou viennent les produits?', a: 'Tous les produits sont fabriques dans des usines certifiees GMP-OMS avec un controle qualite strict.' },
+                { q: 'Combien de temps pour la livraison?', a: 'Ho Chi Minh-Ville: 1-2 jours. Autres provinces: 3-5 jours ouvrables. Livraison gratuite pour les commandes de plus de 300 000 VND.' },
+                { q: 'Quelle est la politique de retour?', a: 'Nous acceptons les retours sous 7 jours si le produit est defectueux. Gardez l\'emballage original.' },
+                { q: 'Peut-on acheter en magasin?', a: 'Oui! Visitez-nous au 174 Hau Giang, quartier Binh Tay, HCMV pour consultation et achat.' },
+                { q: 'Les produits conviennent aux personnes agees?', a: 'La plupart des produits conviennent. Consultez un medecin avant utilisation.' },
+                { q: 'Comment verifier l\'authenticite?', a: 'Chaque produit a des etiquettes anti-contrefacon et des codes QR. Scannez le code pour verifier.' }
+            ]
+        };
+
+        // ===== EVENTS DATA =====
+        const EVENTS_DATA = {
+            vi: [
+                { title: 'Kham suc khoe mien phi', date: '20/06/2026', desc: 'Chuong trinh kham suc khoe mien phi cho nguoi dan tai P. Binh Tay. Bao gom do huyet ap, duong huyet va tu van Dong Y.', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400' },
+                { title: 'Hoi thao Dong Y hien dai', date: '15/07/2026', desc: 'Hoi thao chia se kien thuc ve ket hop Dong Y va Y hoc hien dai trong dieu tri benh man tinh.', img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400' },
+                { title: 'Ngay hoi khach hang than thiet', date: '01/08/2026', desc: 'Tri an khach hang voi nhieu uu dai dac biet: giam gia 30%, tang qua va quay so trung thuong.', img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400' },
+                { title: 'Workshop cham soc suc khoe mua he', date: '10/08/2026', desc: 'Huong dan cach bao ve suc khoe trong mua he voi cac bai thuoc Dong Y don gian tai nha.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' }
+            ],
+            en: [
+                { title: 'Free Health Check-up', date: 'Jun 20, 2026', desc: 'Free health screening program including blood pressure, blood sugar tests and traditional medicine consultation.', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400' },
+                { title: 'Modern Traditional Medicine Seminar', date: 'Jul 15, 2026', desc: 'Seminar sharing knowledge about combining traditional and modern medicine in chronic disease treatment.', img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400' },
+                { title: 'Loyal Customer Day', date: 'Aug 1, 2026', desc: 'Customer appreciation with special offers: 30% discount, gifts and lucky draw prizes.', img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400' },
+                { title: 'Summer Health Care Workshop', date: 'Aug 10, 2026', desc: 'Guide on summer health protection with simple traditional remedies at home.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' }
+            ],
+            fr: [
+                { title: 'Bilan de sante gratuit', date: '20 juin 2026', desc: 'Programme de depistage gratuit: tension arterielle, glycemie et consultation de medecine traditionnelle.', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400' },
+                { title: 'Seminaire Medecine Traditionnelle', date: '15 juil. 2026', desc: 'Seminaire sur la combinaison de la medecine traditionnelle et moderne pour les maladies chroniques.', img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400' },
+                { title: 'Journee des clients fideles', date: '1 aout 2026', desc: 'Remerciement clients: reduction de 30%, cadeaux et tirage au sort.', img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400' },
+                { title: 'Atelier sante ete', date: '10 aout 2026', desc: 'Guide pour proteger votre sante en ete avec des remedes traditionnels simples a la maison.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' }
+            ]
+        };
+
+        // ===== HEALTH DATA =====
+        const HEALTH_DATA = {
+            vi: [
+                { title: 'Cach phong ngua cam cum theo Dong Y', desc: 'Nhung bai thuoc don gian giup tang cuong mien dich va phong ngua cam cum hieu qua trong mua lanh.', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+                { title: 'Bi quyet cham soc da day', desc: 'Che do an uong va sinh hoat giup bao ve da day, giam trieu chung dau da day hieu qua.', img: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=400' },
+                { title: 'Yoga va Dong Y - Ket hop hoan hao', desc: 'Su ket hop giua tap Yoga va su dung thao duoc giup can bang co the, tinh than minh man.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' },
+                { title: 'Thao duoc tot cho giac ngu', desc: 'Cac loai thao duoc tu nhien giup cai thien chat luong giac ngu, giam mat ngu hieu qua.', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400' },
+                { title: 'Tang cuong suc khoe xuong khop', desc: 'Phuong phap Dong Y giup tang cuong suc khoe xuong khop, giam dau nhuc cho nguoi cao tuoi.', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400' },
+                { title: 'Detox co the tu nhien', desc: 'Huong dan thai doc co the an toan bang cac thao duoc tu nhien, giup co the khoe manh tu ben trong.', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
+            ],
+            en: [
+                { title: 'Preventing Cold & Flu with Traditional Medicine', desc: 'Simple herbal remedies to boost immunity and effectively prevent cold and flu during winter.', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+                { title: 'Stomach Care Secrets', desc: 'Diet and lifestyle habits to protect the stomach and reduce stomach pain symptoms effectively.', img: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=400' },
+                { title: 'Yoga & Traditional Medicine - Perfect Combination', desc: 'Combining Yoga practice with herbal use helps balance body and mind clarity.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' },
+                { title: 'Herbs for Better Sleep', desc: 'Natural herbs that help improve sleep quality and reduce insomnia effectively.', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400' },
+                { title: 'Strengthening Joint Health', desc: 'Traditional medicine methods to strengthen joint health and reduce pain for elderly.', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400' },
+                { title: 'Natural Body Detox', desc: 'Guide to safely detox the body with natural herbs for health from within.', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
+            ],
+            fr: [
+                { title: 'Prevenir le rhume avec la medecine traditionnelle', desc: 'Des remedes simples pour renforcer l\'immunite et prevenir le rhume en hiver.', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+                { title: 'Secrets pour l\'estomac', desc: 'Habitudes alimentaires pour proteger l\'estomac et reduire les douleurs.', img: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=400' },
+                { title: 'Yoga & Medecine Traditionnelle', desc: 'Combiner le Yoga avec les herbes pour equilibrer le corps et l\'esprit.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400' },
+                { title: 'Herbes pour mieux dormir', desc: 'Herbes naturelles pour ameliorer la qualite du sommeil efficacement.', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400' },
+                { title: 'Renforcer la sante articulaire', desc: 'Methodes traditionnelles pour renforcer les articulations et reduire la douleur.', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400' },
+                { title: 'Detox naturelle du corps', desc: 'Guide pour detoxifier le corps en toute securite avec des herbes naturelles.', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' }
+            ]
+        };
+
+
+        // ===== CORE FUNCTIONS =====
         async function init() {
             lucide.createIcons();
             renderProducts();
+            renderFAQ();
+            renderEvents();
+            renderHealth();
+            updateContactDisplay();
             updateBalanceUI();
-            
+            startCountdown();
+
             // Firebase Init
             const invRef = doc(db, `artifacts/${APP_ID}/data`, 'inventory');
             const snap = await getDoc(invRef);
@@ -395,15 +875,12 @@
                 const initial = {}; PRIZE_POOL.forEach(p => initial[p.id] = p);
                 await setDoc(invRef, { all: initial });
             }
-
             onSnapshot(invRef, (d) => {
                 if (d.exists()) {
                     prizes = Object.values(d.data().all).sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric:true}));
                     renderWheel();
                 }
             });
-
-            // Admin List
             onSnapshot(query(collection(db, `artifacts/${APP_ID}/users`), orderBy("timestamp", "desc")), (snap) => {
                 document.getElementById('winner-list').innerHTML = snap.docs.map(doc => {
                     const u = doc.data();
@@ -411,25 +888,70 @@
                         <td class="p-6 font-bold text-blue-900">${u.name}</td>
                         <td class="p-6 text-stone-500 font-mono">${u.phone}</td>
                         <td class="p-6 text-center text-red-600 font-black">${u.prize || '--'}</td>
-                        <td class="p-6 text-right text-[10px] text-stone-400 uppercase">${u.timestamp ? new Date(u.timestamp).toLocaleString() : ''}</td>
+                        <td class="p-6 text-right text-[10px] text-stone-400">${u.timestamp ? new Date(u.timestamp).toLocaleString() : ''}</td>
                     </tr>`;
                 }).join('');
             });
         }
 
+        // ===== COUNTDOWN =====
+        function startCountdown() {
+            const endDate = new Date('2026-08-15T23:59:59').getTime();
+            function update() {
+                const now = new Date().getTime();
+                const diff = endDate - now;
+                if (diff <= 0) {
+                    document.getElementById('countdown-timer').textContent = 'DA KET THUC';
+                    return;
+                }
+                const days = Math.floor(diff / (1000*60*60*24));
+                const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+                const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+                const secs = Math.floor((diff % (1000*60)) / 1000);
+                document.getElementById('countdown-timer').textContent = 
+                    `${String(days).padStart(2,'0')}d : ${String(hours).padStart(2,'0')}h : ${String(mins).padStart(2,'0')}m : ${String(secs).padStart(2,'0')}s`;
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        // ===== LANGUAGE =====
+        window.switchLang = (lang) => {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+                    el.innerHTML = TRANSLATIONS[lang][key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+                    el.placeholder = TRANSLATIONS[lang][key];
+                }
+            });
+            renderFAQ();
+            renderEvents();
+            renderHealth();
+        };
+
+        // ===== RENDER FUNCTIONS =====
         function renderProducts() {
             document.getElementById('product-grid').innerHTML = PRODUCTS.map(p => `
                 <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-stone-100 hover:shadow-2xl transition group flex flex-col h-full">
                     <div class="bg-stone-50 rounded-[2rem] overflow-hidden mb-6 aspect-square flex items-center justify-center relative">
                         <img src="${p.img}" alt="${p.name}" class="group-hover:scale-110 transition duration-700 w-full h-full object-cover">
-                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-emerald-800 border border-emerald-100 uppercase tracking-widest">GMP Certified</div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-emerald-800 border border-emerald-100 uppercase tracking-widest">GMP</div>
                     </div>
                     <div class="flex-grow">
                         <h4 class="text-lg font-black text-blue-900 mb-2">${p.name}</h4>
                         <p class="text-xs text-stone-500 mb-6 leading-relaxed">${p.desc}</p>
                     </div>
                     <div class="flex justify-between items-center pt-4 border-t border-stone-50">
-                        <span class="text-xl font-black text-emerald-700 tracking-tighter">${p.price.toLocaleString()}đ</span>
+                        <span class="text-xl font-black text-emerald-700 tracking-tighter">${p.price.toLocaleString()}d</span>
                         <button onclick="addToCart('${p.id}')" class="bg-blue-900 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg hover:bg-emerald-700 transition">
                             <i data-lucide="plus" class="w-5 h-5"></i>
                         </button>
@@ -439,14 +961,209 @@
             lucide.createIcons();
         }
 
-        window.switchTab = (tab) => {
-            const views = ['home-view', 'wallet-view', 'cart-view', 'luckydraw-view', 'admin-view'];
-            views.forEach(v => document.getElementById(v).classList.add('hidden'));
-            document.getElementById(`${tab}-view`).classList.remove('hidden');
-            window.scrollTo(0, 0);
-            if(tab === 'cart') renderCart();
+        function renderFAQ() {
+            const data = FAQ_DATA[currentLang] || FAQ_DATA.vi;
+            document.getElementById('faq-list').innerHTML = data.map((item, i) => `
+                <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm">
+                    <button onclick="toggleFAQ(${i})" class="w-full text-left p-6 flex justify-between items-center hover:bg-stone-50 transition">
+                        <span class="font-bold text-blue-900 pr-4">${item.q}</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-stone-400 flex-shrink-0 faq-icon-${i} transition-transform"></i>
+                    </button>
+                    <div id="faq-answer-${i}" class="hidden px-6 pb-6">
+                        <p class="text-stone-600 text-sm leading-relaxed">${item.a}</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.toggleFAQ = (i) => {
+            const ans = document.getElementById(`faq-answer-${i}`);
+            ans.classList.toggle('hidden');
         };
 
+        function renderEvents() {
+            const data = EVENTS_DATA[currentLang] || EVENTS_DATA.vi;
+            document.getElementById('events-list').innerHTML = data.map(ev => `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 hover:shadow-2xl transition">
+                    <img src="${ev.img}" alt="${ev.title}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+                            <span class="text-xs font-bold text-emerald-700">${ev.date}</span>
+                        </div>
+                        <h3 class="font-black text-blue-900 text-lg mb-2">${ev.title}</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">${ev.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderHealth() {
+            const data = HEALTH_DATA[currentLang] || HEALTH_DATA.vi;
+            document.getElementById('health-list').innerHTML = data.map(h => `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 hover:shadow-2xl transition">
+                    <img src="${h.img}" alt="${h.title}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-black text-blue-900 text-lg mb-2">${h.title}</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">${h.desc}</p>
+                        <button class="mt-4 text-emerald-600 font-bold text-sm hover:text-emerald-700">${currentLang === 'fr' ? 'Lire plus' : currentLang === 'en' ? 'Read more' : 'Doc them'} &rarr;</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+
+        // ===== NAVIGATION =====
+        window.switchTab = (tab) => {
+            const views = ['home-view','products-view','faq-view','events-view','health-view','about-view','contact-view','wallet-view','cart-view','luckydraw-view','admin-login-view','admin-view'];
+            views.forEach(v => { const el = document.getElementById(v); if(el) el.classList.add('hidden'); });
+            const target = document.getElementById(`${tab}-view`);
+            if(target) target.classList.remove('hidden');
+            window.scrollTo(0, 0);
+            if(tab === 'cart') renderCart();
+            if(tab === 'admin' && !isAdmin) { switchTab('admin-login'); return; }
+        };
+
+        window.toggleMobileMenu = () => {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        };
+
+        // ===== ADMIN =====
+        window.adminLoginSubmit = (e) => {
+            e.preventDefault();
+            const pw = document.getElementById('admin-password').value;
+            if(pw === ADMIN_PASSWORD) {
+                isAdmin = true;
+                document.getElementById('admin-error').classList.add('hidden');
+                document.getElementById('admin-password').value = '';
+                switchTab('admin');
+                renderAdminProducts();
+            } else {
+                document.getElementById('admin-error').classList.remove('hidden');
+            }
+        };
+
+        window.adminLogout = () => {
+            isAdmin = false;
+            switchTab('home');
+        };
+
+        window.switchAdminTab = (tab) => {
+            document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tab).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        };
+
+        function renderAdminProducts() {
+            document.getElementById('admin-product-list').innerHTML = PRODUCTS.map(p => `
+                <div class="bg-white p-4 rounded-2xl flex gap-4 items-center border border-stone-100 shadow-sm">
+                    <img src="${p.img}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
+                    <div class="flex-grow min-w-0">
+                        <p class="font-bold text-blue-900 truncate">${p.name}</p>
+                        <p class="text-xs text-emerald-600 font-bold">${p.price.toLocaleString()}d</p>
+                        <p class="text-xs text-stone-400 truncate">${p.desc}</p>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0">
+                        <button onclick="editProduct('${p.id}')" class="p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition"><i data-lucide="edit" class="w-4 h-4 text-blue-700"></i></button>
+                        <button onclick="deleteProduct('${p.id}')" class="p-2 bg-red-50 rounded-lg hover:bg-red-100 transition"><i data-lucide="trash-2" class="w-4 h-4 text-red-600"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.showAddProduct = () => {
+            document.getElementById('product-modal-title').textContent = 'Them san pham moi';
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('edit-product-name').value = '';
+            document.getElementById('edit-product-price').value = '';
+            document.getElementById('edit-product-desc').value = '';
+            document.getElementById('edit-product-img').value = '';
+            document.getElementById('product-modal').classList.remove('hidden');
+        };
+
+        window.editProduct = (id) => {
+            const p = PRODUCTS.find(x => x.id === id);
+            if(!p) return;
+            document.getElementById('product-modal-title').textContent = 'Chinh sua san pham';
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('edit-product-name').value = p.name;
+            document.getElementById('edit-product-price').value = p.price;
+            document.getElementById('edit-product-desc').value = p.desc;
+            document.getElementById('edit-product-img').value = p.img;
+            document.getElementById('product-modal').classList.remove('hidden');
+        };
+
+        window.deleteProduct = (id) => {
+            if(!confirm('Ban co chac muon xoa san pham nay?')) return;
+            PRODUCTS = PRODUCTS.filter(p => p.id !== id);
+            localStorage.setItem('bn_products', JSON.stringify(PRODUCTS));
+            renderProducts();
+            renderAdminProducts();
+        };
+
+        window.saveProduct = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-product-id').value;
+            const data = {
+                name: document.getElementById('edit-product-name').value,
+                price: parseInt(document.getElementById('edit-product-price').value),
+                desc: document.getElementById('edit-product-desc').value,
+                img: document.getElementById('edit-product-img').value || 'https://images.unsplash.com/photo-1512036666432-2181c1f26420?w=300'
+            };
+            if(id) {
+                const idx = PRODUCTS.findIndex(p => p.id === id);
+                if(idx >= 0) PRODUCTS[idx] = {...PRODUCTS[idx], ...data};
+            } else {
+                data.id = Date.now().toString();
+                PRODUCTS.push(data);
+            }
+            localStorage.setItem('bn_products', JSON.stringify(PRODUCTS));
+            renderProducts();
+            renderAdminProducts();
+            hideProductModal();
+            showResult('THANH CONG', 'San pham da duoc luu!');
+        };
+
+        window.hideProductModal = () => {
+            document.getElementById('product-modal').classList.add('hidden');
+        };
+
+        window.saveContactInfo = (e) => {
+            e.preventDefault();
+            contactInfo.address = document.getElementById('edit-address').value;
+            contactInfo.phone = document.getElementById('edit-phone').value;
+            contactInfo.email = document.getElementById('edit-email').value;
+            localStorage.setItem('bn_contact', JSON.stringify(contactInfo));
+            updateContactDisplay();
+            showResult('THANH CONG', 'Thong tin lien he da cap nhat!');
+        };
+
+        function updateContactDisplay() {
+            const addr = document.getElementById('display-address');
+            const phone = document.getElementById('display-phone');
+            const email = document.getElementById('display-email');
+            if(addr) addr.textContent = contactInfo.address;
+            if(phone) phone.textContent = contactInfo.phone;
+            if(email) email.textContent = contactInfo.email;
+            const fAddr = document.getElementById('footer-address');
+            const fPhone = document.getElementById('footer-phone');
+            const fEmail = document.getElementById('footer-email');
+            if(fAddr) fAddr.textContent = contactInfo.address;
+            if(fPhone) fPhone.textContent = 'Hotline: ' + contactInfo.phone;
+            if(fEmail) fEmail.textContent = contactInfo.email;
+            document.getElementById('edit-address').value = contactInfo.address;
+            document.getElementById('edit-phone').value = contactInfo.phone;
+            document.getElementById('edit-email').value = contactInfo.email;
+            const floatPhone = document.getElementById('float-phone');
+            if(floatPhone) floatPhone.href = 'tel:' + contactInfo.phone;
+        }
+
+
+        // ===== WALLET =====
         window.topUp = (amount) => {
             const memo = `NAP_TIEN_BN_${Math.floor(Math.random()*10000)}`;
             document.getElementById('payment-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=STB|060241088888|${amount}|${memo}`;
@@ -461,21 +1178,22 @@
             balance += (amount + bonus);
             updateBalanceUI();
             hideModals();
-            showResult('THÀNH CÔNG', `Đã nạp ${amount.toLocaleString()}đ + Thưởng ${bonus.toLocaleString()}đ vào ví!`);
+            showResult('THANH CONG', `Da nap ${amount.toLocaleString()}d + Thuong ${bonus.toLocaleString()}d!`);
         };
 
         function updateBalanceUI() {
-            document.getElementById('nav-balance').textContent = balance.toLocaleString() + 'đ';
-            document.getElementById('balance-display').textContent = balance.toLocaleString() + 'đ';
+            document.getElementById('balance-display').textContent = balance.toLocaleString() + 'd';
         }
 
+        // ===== CART =====
         window.addToCart = (id) => {
             const p = PRODUCTS.find(x => x.id === id);
+            if(!p) return;
             const exists = cart.find(x => x.id === id);
             if(exists) exists.qty++;
             else cart.push({...p, qty: 1});
             updateCartBadge();
-            showResult('ĐÃ THÊM', `Sản phẩm ${p.name} đã được vào giỏ.`);
+            showResult('DA THEM', `${p.name} da vao gio hang.`);
         };
 
         function updateCartBadge() {
@@ -487,7 +1205,7 @@
         function renderCart() {
             const container = document.getElementById('cart-items');
             if(cart.length === 0) {
-                container.innerHTML = `<div class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-stone-100 text-stone-400">Giỏ hàng trống</div>`;
+                container.innerHTML = `<div class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-stone-100 text-stone-400">Gio hang trong</div>`;
                 return;
             }
             container.innerHTML = cart.map((p, idx) => `
@@ -495,12 +1213,12 @@
                     <img src="${p.img}" class="w-16 h-16 rounded-xl object-cover">
                     <div class="flex-grow">
                         <p class="font-bold text-blue-900">${p.name}</p>
-                        <p class="text-xs text-emerald-600 font-bold">${p.price.toLocaleString()}đ</p>
+                        <p class="text-xs text-emerald-600 font-bold">${p.price.toLocaleString()}d</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="updateQty(${idx}, -1)" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">-</button>
+                        <button onclick="updateQty(${idx}, -1)" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center font-bold">-</button>
                         <span class="font-bold w-4 text-center">${p.qty}</span>
-                        <button onclick="updateQty(${idx}, 1)" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">+</button>
+                        <button onclick="updateQty(${idx}, 1)" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center font-bold">+</button>
                     </div>
                 </div>
             `).join('');
@@ -516,14 +1234,13 @@
 
         function updateTotals() {
             const sub = cart.reduce((s, x) => s + (x.price * x.qty), 0);
-            document.getElementById('subtotal').textContent = sub.toLocaleString() + 'đ';
-            document.getElementById('total-amount').textContent = sub.toLocaleString() + 'đ';
+            document.getElementById('subtotal').textContent = sub.toLocaleString() + 'd';
+            document.getElementById('total-amount').textContent = sub.toLocaleString() + 'd';
         }
 
         window.checkout = async () => {
             if(cart.length === 0) return;
             const total = cart.reduce((s, x) => s + (x.price * x.qty), 0);
-            
             if(balance >= total) {
                 balance -= total;
                 updateBalanceUI();
@@ -531,39 +1248,45 @@
                 cart = [];
                 updateCartBadge();
                 renderCart();
-                showResult('THANH TOÁN XONG', 'Số dư ví đã được khấu trừ. Đang tải hóa đơn...');
+                showResult('THANH TOAN XONG', 'Dang tai hoa don...');
             } else {
                 const deficit = total - balance;
-                alert(`Ví không đủ! Vui lòng nạp thêm ít nhất ${deficit.toLocaleString()}đ`);
+                alert(`Vi khong du! Vui long nap them ${deficit.toLocaleString()}d`);
                 switchTab('wallet');
             }
         };
 
         function generateInvoice(total) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFont("helvetica", "bold");
-            doc.text("HOA DON BAN HANG - THIEN DUYEN Y QUAN", 20, 20);
-            doc.setFont("helvetica", "normal");
-            doc.text("Ngay: " + new Date().toLocaleDateString(), 20, 30);
-            doc.text("Dia chi: 174 Hau Giang, P. Binh Tay, HCM", 20, 40);
-            doc.line(20, 45, 190, 45);
-            
+            const d = new jsPDF();
+            d.setFont("helvetica", "bold");
+            d.text("HOA DON - OFFISANTE BAO NGOC VN", 20, 20);
+            d.setFont("helvetica", "normal");
+            d.text("Ngay: " + new Date().toLocaleDateString(), 20, 30);
+            d.text("Dia chi: " + contactInfo.address, 20, 40);
+            d.line(20, 45, 190, 45);
             let y = 55;
             cart.forEach(p => {
-                doc.text(`${p.name} x ${p.qty}`, 20, y);
-                doc.text(`${(p.price * p.qty).toLocaleString()}d`, 150, y);
+                d.text(`${p.name} x ${p.qty}`, 20, y);
+                d.text(`${(p.price * p.qty).toLocaleString()}d`, 150, y);
                 y += 10;
             });
-            
-            doc.line(20, y, 190, y);
-            doc.setFont("helvetica", "bold");
-            doc.text("TONG CONG:", 20, y + 10);
-            doc.text(`${total.toLocaleString()}d`, 150, y + 10);
-            doc.save("HoaDon_BaoNgoc.pdf");
+            d.line(20, y, 190, y);
+            d.setFont("helvetica", "bold");
+            d.text("TONG CONG:", 20, y + 10);
+            d.text(`${total.toLocaleString()}d`, 150, y + 10);
+            d.save("HoaDon_BaoNgoc.pdf");
         }
 
-        // Lucky Draw Logic
+        // ===== CONTACT FORM =====
+        window.submitContact = (e) => {
+            e.preventDefault();
+            showResult('DA GUI', 'Tin nhan cua ban da duoc gui thanh cong! Chung toi se phan hoi trong 24h.');
+            e.target.reset();
+        };
+
+
+        // ===== LUCKY DRAW =====
         function renderWheel() {
             const wheel = document.getElementById('wheel-element');
             if(!wheel) return;
@@ -585,7 +1308,6 @@
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             if(!name || !phone) return;
-            
             const userRef = doc(db, `artifacts/${APP_ID}/users`, phone);
             const snap = await getDoc(userRef);
             if(snap.exists()) {
@@ -597,9 +1319,22 @@
             updateDrawUI();
         };
 
+        document.getElementById('share-btn').onclick = async () => {
+            if(!currentUser) return;
+            if(!currentUser.hasShared) {
+                currentUser.turns += 1;
+                currentUser.hasShared = true;
+                await setDoc(doc(db, `artifacts/${APP_ID}/users`, currentUser.phone), currentUser, { merge: true });
+                updateDrawUI();
+                showResult('CHIA SE', '+1 luot quay da duoc cong!');
+            } else {
+                showResult('THONG BAO', 'Ban da nhan luot chia se roi!');
+            }
+        };
+
         function updateDrawUI() {
-            document.getElementById('turns-display').textContent = currentUser.turns;
-            document.getElementById('spin-btn').disabled = currentUser.turns <= 0;
+            document.getElementById('turns-display').textContent = currentUser ? currentUser.turns : 0;
+            document.getElementById('spin-btn').disabled = !currentUser || currentUser.turns <= 0;
         }
 
         document.getElementById('spin-btn').onclick = async () => {
@@ -625,20 +1360,16 @@
             document.getElementById('wheel-element').style.transform = `rotate(${deg}deg)`;
 
             setTimeout(async () => {
-                currentUser.turns = 0;
+                currentUser.turns--;
                 currentUser.prize = winner.name;
                 await setDoc(doc(db, `artifacts/${APP_ID}/users`, currentUser.phone), currentUser, { merge: true });
-                showResult(winner.id === 'p7' ? 'TIẾC QUÁ' : 'TRÚNG THƯỞNG', winner.name);
+                showResult(winner.id === 'p7' ? 'TIEC QUA' : 'TRUNG THUONG', winner.name);
                 updateDrawUI();
                 btn.disabled = false;
             }, 5500);
         };
 
-        window.adminLogin = () => {
-            const p = prompt("Mật mã:");
-            if(p === "86868") switchTab('admin');
-        };
-
+        // ===== MODALS =====
         window.hideModals = () => {
             document.getElementById('payment-modal').classList.add('hidden');
             document.getElementById('result-modal').classList.add('hidden');
@@ -652,8 +1383,8 @@
 
         document.getElementById('close-modal').onclick = hideModals;
 
+        // ===== INIT =====
         init();
     </script>
 </body>
 </html>
-```
